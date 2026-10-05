@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+/*
+  Theme: "Clay & Sage", drawn from Dr. Reynolds' own office photos
+  (exposed brick, sage-grey upholstery, warm oak floors, soft natural light).
+  Change a token here and the whole site follows.
+*/
+:root {
+  --cream: #f7f2ea;      /* page + hero background */
+  --paper: #fffcf7;      /* "white" sections */
+  --sand: #eadfce;       /* warm alt section */
+  --sage: #5f7d6e;       /* secondary, light */
+  --sage-deep: #2d4a3e;  /* secondary — headings, dark bands */
+  --clay: #a84f35;       /* primary — brick / terracotta (AA on cream) */
+  --clay-deep: #86392a;  /* primary hover */
+  --gold: #d9a45b;       /* accent — golden-hour light */
+  --ink: #2b2825;        /* body text */
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-sand: var(--sand);
+  --color-sage: var(--sage);
+  --color-sage-deep: var(--sage-deep);
+  --color-clay: var(--clay);
+  --color-clay-deep: var(--clay-deep);
+  --color-gold: var(--gold);
+  --color-ink: var(--ink);
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-sans: var(--font-mulish), system-ui, sans-serif;
+  --font-script: var(--font-script), cursive;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-mulish), system-ui, sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--sage-deep);
+}
+
+:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 4px;
+}
+
+/*
+  Layout grid, rebuilt from the original template's fluid grid:
+  10 columns on mobile and 26 on desktop (24 content columns plus a flexible
+  gutter column on each side), with rows that scale with the viewport.
+  Each block is placed with explicit grid lines, so section geometry matches
+  the original at every width.
+*/
+.fe {
+  --gap: 11px;
+  --gutter: 6vw;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns:
+    minmax(calc(var(--gutter) - var(--gap)), 1fr)
+    repeat(8, minmax(0, calc((1800px - var(--gap) * 7) / 8)))
+    minmax(calc(var(--gutter) - var(--gap)), 1fr);
+  grid-template-rows: repeat(var(--rows-m), minmax(24px, auto));
+}
+
+.cell {
+  grid-area: var(--m);
+  position: relative;
+  min-width: 0;
+}
+
+.section-pad {
+  padding-block: var(--pad-m);
+}
+
+@media (min-width: 768px) {
+  .fe {
+    --gutter: 5vw;
+    grid-template-columns:
+      minmax(calc(var(--gutter) - var(--gap)), 1fr)
+      repeat(24, minmax(0, calc((1800px - var(--gap) * 23) / 24)))
+      minmax(calc(var(--gutter) - var(--gap)), 1fr);
+    grid-template-rows: repeat(var(--rows-d), minmax(calc(min(1800px, 90vw) * 0.0215), auto));
+  }
+  .cell {
+    grid-area: var(--d);
+  }
+  .section-pad {
+    padding-block: var(--pad-d);
+  }
+}
+
+/* Type scale follows the original: headings grow with the viewport on desktop. */
+@layer components {
+  .h1,
+  .h2,
+  .h3,
+  .h4 {
+    @apply font-serif font-light tracking-[-0.01em] text-sage-deep;
+  }
+  .h1 {
+    font-size: 46px;
+    line-height: 1.22;
+  }
+  .h2 {
+    font-size: 38px;
+    line-height: 1.27;
+  }
+  .h3 {
+    font-size: 33px;
+    line-height: 1.3;
+  }
+  .h4 {
+    font-size: 25px;
+    line-height: 1.32;
+  }
+  .p-body {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  @media (min-width: 768px) {
+    .h1 {
+      font-size: calc(1rem + 3vw);
+    }
+    .h2 {
+      font-size: calc((1rem + 2.16vw) * 1.12);
+    }
+    .h3 {
+      font-size: calc((1rem + 1.57vw) * 1.12);
+    }
+    .h4 {
+      font-size: calc((1rem + 0.72vw) * 1.12);
+    }
+    .p-body {
+      font-size: clamp(15px, 0.675rem + 0.41vw, 18px);
+    }
+  }
+
+  /* small uppercase line: eyebrows, lead sentences, list items */
+  .caps {
+    @apply text-[14px] font-normal uppercase leading-[1.8] tracking-[0.12em] text-sage-deep md:text-[15px];
+  }
+  /* handwritten accent word, like the original's "thrive" / "expertise" */
+  .accent {
+    @apply font-script text-[1.35em] font-normal leading-[0.8] tracking-normal text-clay;
+  }
+  /* underlined text link (original: BOOK AN APPOINTMENT / LEARN MORE) */
+  .link-line {
+    @apply inline-block border-b border-sage-deep py-[9px] text-[12.5px] font-normal uppercase leading-none tracking-[0.12em] text-sage-deep transition-colors hover:border-clay hover:text-clay;
+  }
+  /* outlined oval button (original: BOOK NOW / CONTACT) */
+  .btn-pill {
+    @apply inline-block rounded-[100%] border border-sage-deep px-[19.5px] py-[15px] text-[12.5px] font-normal uppercase leading-none tracking-[0.12em] text-sage-deep transition-colors hover:border-clay hover:bg-clay hover:text-cream;
+  }
+}
